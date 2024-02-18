@@ -36,7 +36,7 @@ $_SESSION['currentQuestion']++;
 </head>
 
 <body>
-    <div class="container mt-4">
+    <div class="container mt-4 center">
         <h1>Resultado de la respuesta</h1>
         <p><?php echo $mensaje; ?></p>
         <form method="post" action="index.php">

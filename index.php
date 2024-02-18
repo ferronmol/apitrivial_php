@@ -10,12 +10,6 @@ function mostrarOpciones($data, $valueField, $textField, $default = "")
     }
 }
 
-// Verificar si se ha solicitado reiniciar el juego
-if (isset($_POST['restart'])) {
-    unset($_SESSION['preguntasrespuestas']);
-    unset($_SESSION['currentQuestion']);
-}
-
 // Verificamos si ya hay preguntas en la sesión
 $preguntasRespuestas = isset($_SESSION['preguntasrespuestas']) ? $_SESSION['preguntasrespuestas'] : array();
 
@@ -32,6 +26,17 @@ $type = isset($_POST['type']) ? $_POST['type'] : 'any';
 $category = isset($_POST['category']) ? $_POST['category'] : '';
 $difficulty = isset($_POST['difficulty']) ? $_POST['difficulty'] : 'any';
 
+// Verificar si se reinicia el juego
+$reiniciar = isset($_POST['reiniciar']) ? $_POST['reiniciar'] : false;
+
+// Reiniciar el juego si es necesario
+if ($reiniciar) {
+    $preguntasRespuestas = array();
+    $currentQuestion = 0;
+    unset($_SESSION['preguntasrespuestas']); // Eliminar las preguntas de la sesión
+    unset($_SESSION['currentQuestion']);     // Eliminar el índice de la pregunta actual
+}
+
 // Construimos la URL de la API
 $url = "https://opentdb.com/api.php";
 $params = array(
@@ -40,7 +45,7 @@ $params = array(
     'category' => $category,
     'difficulty' => $difficulty
 );
-$url .= '?' . http_build_query($params);
+$url .= '?' . http_build_query($params); // Agregar los parámetros a la URL con formato de consulta
 
 // Obtenemos los datos de la API
 $trivial = json_decode(file_get_contents($url), true);
@@ -61,6 +66,10 @@ $trivial = json_decode(file_get_contents($url), true);
 <body>
     <div class="main_container">
         <div class="form-container form">
+            <form method="post" action="">
+                <input type="hidden" name="reiniciar" value="1">
+                <button class="btn-c" type="submit">Reiniciar</button>
+            </form>
             <h1 class="mt-4 center">Trivial</h1>
             <p class="text center">Selecciona el modo de juego</p>
             <form class="form" method="post" action="">
@@ -84,11 +93,10 @@ $trivial = json_decode(file_get_contents($url), true);
                     </select>
                 </div>
                 <input type="hidden" name="continue" value="1">
-                <button class="btn-custom center" type="submit" name="submit">Mostrar Preguntas</button>
+                <button class="btn-custom center" type="submit" name="submit">JUGAR</button>
             </form>
-
             <?php
-            if (isset($trivial['results'])) {
+            if (isset($trivial['results']) && !$reiniciar) {
                 foreach ($trivial['results'] as $question) {
                     $pregunta = array(
                         'enunciado' => $question['question'],
@@ -103,7 +111,8 @@ $trivial = json_decode(file_get_contents($url), true);
                 $typeMatch = (!isset($_POST['type']) || (isset($question['type']) && $question['type'] == $_POST['type']));
                 $difficultyMatch = (!isset($_POST['difficulty']) || (isset($question['difficulty']) && $question['difficulty'] == $_POST['difficulty']));
 
-                if ($typeMatch && $difficultyMatch) { ?>
+                if ($typeMatch && $difficultyMatch && isset($preguntasRespuestas[$currentQuestion]['respuestas'])) {
+            ?>
                     <div class="form-container form">
                         <?php $preguntaActual = $preguntasRespuestas[$currentQuestion]; ?>
                         <p class="white"><?php echo $preguntaActual['enunciado']; ?></p>
@@ -121,8 +130,12 @@ $trivial = json_decode(file_get_contents($url), true);
                             <button class="btn-c" type="submit">Verificar Respuesta</button>
                         </form>
                     </div>
-            <?php }
-            } ?>
+                <?php
+                } else {
+                    echo "Error: No se encontraron respuestas para la pregunta actual.";
+                }
+                ?>
+            <?php } ?>
         </div>
     </div>
 </body>

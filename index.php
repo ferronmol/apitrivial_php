@@ -121,35 +121,14 @@ if (!$reiniciar) {
                 $difficultyMatch = (!isset($_POST['difficulty']) || (isset($question['difficulty']) && $question['difficulty'] == $_POST['difficulty']));
 
                 if ($typeMatch && $difficultyMatch && isset($preguntasRespuestas[$currentQuestion]['respuestas'])) {
-            ?>
-                    <div class="form-container form">
-                        <?php $preguntaActual = $preguntasRespuestas[$currentQuestion]; ?>
-                        <p class="white"><?php echo $preguntaActual['enunciado']; ?></p>
-                        <form class="mini-form" method="post" action="verificar_respuesta.php">
-                            <div class="respuestas-container">
-                                <?php foreach ($preguntaActual['respuestas'] as $respuesta) { ?>
-                                    <label>
-                                        <input type="radio" name="respuesta" value="<?php echo $respuesta; ?>">
-                                        <?php echo $respuesta; ?>
-                                    </label><br>
-                                <?php } ?>
-                            </div>
-                            <input type="hidden" name="correct_answer" value="<?php echo end($preguntaActual['respuestas']); ?>">
-                            <input type="hidden" name="continue" value="1">
-                            <button class="btn-c" type="submit">Verificar Respuesta</button>
-                        </form>
-                    </div>
-                <?php
+                    mostrarPregunta($preguntasRespuestas[$currentQuestion]);
                 } else {
-                    echo "Error: No se encontraron respuestas para la pregunta actual.";
+                    mostrarError();
                 }
-                ?>
+            }
+            ?>
         </div>
     </div>
-<?php
-            }
-
-?>
 </body>
 
 </html>

@@ -29,14 +29,6 @@ $difficulty = isset($_POST['difficulty']) ? $_POST['difficulty'] : 'any';
 // Verificar si se reinicia el juego
 $reiniciar = isset($_POST['reiniciar']) ? $_POST['reiniciar'] : false;
 
-// Reiniciar el juego si es necesario
-if ($reiniciar) {
-    $preguntasRespuestas = array();
-    $currentQuestion = 0;
-    unset($_SESSION['preguntasrespuestas']); // Eliminar las preguntas de la sesión
-    unset($_SESSION['currentQuestion']);     // Eliminar el índice de la pregunta actual
-}
-
 // Construimos la URL de la API
 $url = "https://opentdb.com/api.php";
 $params = array(
@@ -47,8 +39,25 @@ $params = array(
 );
 $url .= '?' . http_build_query($params); // Agregar los parámetros a la URL con formato de consulta
 
-// Obtenemos los datos de la API
-$trivial = json_decode(file_get_contents($url), true);
+// Obtenemos los datos de la API solo si no estamos reiniciando el juego
+if (!$reiniciar) {
+    $trivial = json_decode(file_get_contents($url), true);
+    //verificamos si hay preguntas
+    if (isset($trivial['results'])) {
+        $preguntasRespuestas = array();
+        foreach ($trivial['results'] as $question) {
+            $pregunta = array(
+                'enunciado' => $question['question'],
+                'respuestas' => array_merge($question['incorrect_answers'], array($question['correct_answer']))
+            );
+            $preguntasRespuestas[] = $pregunta;
+        }
+
+        $_SESSION['preguntasrespuestas'] = $preguntasRespuestas;
+
+        $_SESSION['currentQuestion'] = 0;
+    }
+}
 
 ?>
 
@@ -135,9 +144,12 @@ $trivial = json_decode(file_get_contents($url), true);
                     echo "Error: No se encontraron respuestas para la pregunta actual.";
                 }
                 ?>
-            <?php } ?>
         </div>
     </div>
+<?php
+            }
+
+?>
 </body>
 
 </html>

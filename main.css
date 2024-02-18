@@ -99,13 +99,10 @@ body {
   background-image: var(--mi-gradiant3);
   border-radius: 8px;
   color: red;
-  display: flex;
   font-size: 1rem;
   padding: 3px;
   cursor: pointer;
   transition: 0.3s;
-  margin-left: auto;
-  margin: 0.5rem;
   text-decoration: none;
   width: 120px;
 }
@@ -229,15 +226,8 @@ form button {
   font-size: 1.5rem;
 }
 
-.btn-custom {
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-  margin-right: 0.5rem;
-}
-
 .center {
   text-align: center;
-  margin: 0 auto;
   margin-top: 0.5rem;
 }
 

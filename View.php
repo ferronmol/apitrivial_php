@@ -281,52 +281,46 @@ class View
     {
         //var_dump($category);
     ?>
-        <div class="main_container">
-            <div class="form-container form">
-                <form method="post" action="">
-                    <input type="hidden" name="reiniciar" value="1">
-                    <button class="btn-c" type="submit">Reiniciar</button>
-                </form>
-                <h1 class="mt-4 center">Trivial</h1>
-                <p class="text center">Selecciona el modo de juego</p>
-                <form class="form" method="post" action="">
-                    <div class="form-group">
-                        <label class="label" for="numpreguntas">Indica el número de preguntas</label>
-                        <input type="number" required name="numpreguntas" class="form-control" id="numpreguntas" value="">
-                    </div>
-                    <div class="form-group">
-                        <select name="type" class="form-select">
-                            <option value="any">Any Type</option>
-                            <option value="multiple">Multiple Choice</option>
-                            <option value="boolean">True / False</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <select name="categorySelect" class="form-select">
-                            <?php
-                            foreach ($category['trivia_categories'] as $cat) {
-                                echo '<option value="' . $cat['name'] . '">' . $cat['name'] . '</option>';
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <select name="difficulty" class="form-select">
-                            <option value="any">Any Difficulty</option>
-                            <option value="easy">Easy</option>
-                            <option value="medium">Medium</option>
-                            <option value="hard">Hard</option>
-                        </select>
-                    </div>
-                    <input type="hidden" name="continue" value="1">
-                    <button class="btn-custom center" type="submit" name="submit">JUGAR</button>
-                </form>
-                <?php
-                if (isset($_POST['submit'])) {
-                    echo '<a href="index.php?controller=All&action=mostrarInicio" class="btn btn-primary">Back</a>';
-                }
-                ?>
-            </div>
+        <div class="form-container ">
+            <h1 class="mt-4 center">Trivial</h1>
+            <p class="text center">Selecciona el modo de juego</p>
+            <form class="form" method="post" action="">
+                <div class="form-group">
+                    <label class="label" for="numpreguntas">Indica el número de preguntas</label>
+                    <input type="number" required name="numpreguntas" class="form-control" id="numpreguntas" value="">
+                </div>
+                <div class="form-group">
+                    <select name="type" class="form-select">
+                        <option value="any">Any Type</option>
+                        <option value="multiple">Multiple Choice</option>
+                        <option value="boolean">True / False</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select name="categorySelect" class="form-select">
+                        <?php
+                        foreach ($category['trivia_categories'] as $cat) {
+                            echo '<option value="' . $cat['name'] . '">' . $cat['name'] . '</option>';
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select name="difficulty" class="form-select">
+                        <option value="any">Any Difficulty</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                <input type="hidden" name="continue" value="1">
+                <button class="btn-c center" type="submit" name="submit">JUGAR</button>
+            </form>
+            <?php
+            if (isset($_POST['submit'])) {
+                echo '<a href="index.php?controller=All&action=mostrarInicio" class="btn btn-primary">Back</a>';
+            }
+            ?>
         </div>
     <?php
     }
